@@ -4,6 +4,10 @@
 
 The `AhkTimerClass` repository contains a `Timer` class for high-precision benchmarking in AutoHotkey scripts. It uses the `QueryPerformanceCounter` API for more accurate timing than the built-in `A_TickCount` command. The class allows you to add timestamps, reset the counter, display results.
 
+## Youtube
+
+[![AhkTimerClass_GH](https://github.com/bceenaeiklmr/AhkTimerClass/assets/105103590/2c6b0719-5520-40e9-8eee-279b3e2280fa)](https://www.youtube.com/watch?v=SqNZMddZQv8)
+
 ## Features
 
 - **High-Precision Timing:** Uses `QueryPerformanceCounter` for accurate timing.
@@ -12,13 +16,14 @@ The `AhkTimerClass` repository contains a `Timer` class for high-precision bench
 - **Display Results:** Show timing results in a formatted message box.
 
 ## Installation
-- Download the classTimer.ahk file from the repository.
-- Include the classTimer.ahk script in your AutoHotkey project.
+- Download the AhkTimerClass.ahk file from the repository.
+- Include the AhkTimerClass.ahk script in your AutoHotkey project.
 - Run the test file.
 
 ## Properties
 
-- **`qpc`**: Returns the current QPC timestamp.
+- **`qpc`**: Returns the current `QueryPerformanceCounter`.
+- **`qpf`**: Returns the current `QueryPerformanceFrequency`.
 
 ## Methods
 
