@@ -2,9 +2,8 @@
 ; License:   MIT License
 ; Author:    Bence Markiel (bceenaeiklmr)
 ; Github:    https://github.com/bceenaeiklmr/AhkTimerClass
-; Date       19.05.2024
-; Version    0.2
-
+; Date       20.05.2024
+; Version    0.2.1
 #Requires AutoHotkey >=2.0
 #SingleInstance Force
 #Warn All
@@ -32,10 +31,10 @@ class Timer {
 
     ; Waits for the specified time in milliseconds, enables shorter sleep than `15.6` ms.
     static wait(ms) {
-        start := this.qpc / this.freq
+        start := this.qpc / this.qpf
         waited := 0
         while waited <= ms
-            waited := (this.qpc / this.freq - start) * 1000
+            waited := (this.qpc / this.qpf - start) * 1000
         return waited
     }
 
@@ -51,7 +50,7 @@ class Timer {
             if A_Index !== 1 {
                 recent := this.counter[A_Index][1]
                 previous := this.counter[A_Index - 1][1]
-                elapsed := (recent - previous) / this.freq * 1000
+                elapsed := (recent - previous) / this.qpf * 1000
                 str .= elapsed '`t' A_Index - 1 '`n'
             }
         }
@@ -74,7 +73,7 @@ class Timer {
             if A_Index !== 1 {
                 recent := this.counter[A_Index][1]
                 previous := this.counter[A_Index - 1][1]
-                this.total += elapsed := (recent - previous) / this.freq * 1000
+                this.total += elapsed := (recent - previous) / this.qpf * 1000
                 (elapsed < this.min) ? this.min := elapsed : ''
                 (elapsed > this.max) ? this.max := elapsed : ''
                 name := counter[2] ? counter[2] : A_Index - 1
@@ -83,23 +82,19 @@ class Timer {
         }
 
         return SubStr(
-            '∑'   '`t' Format('{:.2f}', this.total)     '`tms' '`n' .
-            'avg' '`t' Format('{:.2f}', this.total / n) '`tms' '`n' .
-            'min' '`t' Format('{:.2f}', this.min)       '`tms' '`n' .
-            'max' '`t' Format('{:.2f}', this.max)       '`tms' '`n' .
-            'fps' '`t' Format('{:.2f}', 1000 / this.total)    '`n' .
+            '∑'   '`t' Format('{:.2f}', this.total)     '`t' 'ms' '`n' .
+            'avg' '`t' Format('{:.2f}', this.total / n) '`t' 'ms' '`n' .
+            'min' '`t' Format('{:.2f}', this.min)       '`t' 'ms' '`n' .
+            'max' '`t' Format('{:.2f}', this.max)       '`t' 'ms' '`n' .
+            'fps' '`t' Format('{:.2f}', 1000 / this.total)        '`n' .
             'n'   '`t' n '`n`n' str, 1, -1)
     }
 
-    ; Returns the current QPC timestamp.
+    ;properties
     static qpc => (DllCall('QueryPerformanceCounter', 'Int64*', &qpc := 0), qpc)
+    static qpf => (DllCall('QueryPerformanceFrequency', 'Int64*', &qpf := 0), qpf)
 
     ; Reinitializes, resets the Timer object.
     __New() => Timer.__New()
-
-    static __New() {
-        DllCall('QueryPerformanceFrequency', 'Int64*', &freq := 0)
-        this.freq := freq
-        this.reset()
-    }
+    static __New() => this.reset()
 }
